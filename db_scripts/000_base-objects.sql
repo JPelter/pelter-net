@@ -13,13 +13,3 @@ CREATE TABLE POST (
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
-
-CREATE TABLE COMMENT (
-    comment_id INTEGER PRIMARY KEY,
-    post_id INTEGER,
-    user_id INTEGER,
-    content TEXT NOT NULL,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES post (post_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
-);

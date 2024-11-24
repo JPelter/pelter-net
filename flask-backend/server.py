@@ -8,6 +8,7 @@ from waitress import serve
 # AUTHORED IMPORTS
 from flask_app import app
 import routes.user_routes
+import routes.post_routes
 
 @app.route('/api/hello-world', methods=['GET'])
 def hello_world():

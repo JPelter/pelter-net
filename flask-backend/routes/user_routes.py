@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 @app.route('/api/get-users', methods=['GET'])
 def get_users():
     app.logger.info('Someone got the user list!')
-    return jsonify(db.session.query(USER).all())
+    return jsonify([{"id":_user.user_id, "username":_user.username} for _user in db.session.query(USER).all()])
 
 @app.route('/api/create-user', methods=['POST'])
 def create_user():
@@ -25,9 +25,11 @@ def create_user():
     if not username.isalnum():
         return jsonify({"message":f"Username may only contain letters and numbers!"}), 400
     
-    db.session.add(USER(username=username, password=generate_password_hash(password)))
+    new_user = USER(username=username, password=generate_password_hash(password))
+    db.session.add(new_user)
     db.session.commit()
     session['username'] = username
+    session['user_id'] = new_user.user_id
     return {"message": "User registered successfully"}, 201
 
 @app.route('/api/login-user', methods=['POST'])
@@ -39,6 +41,7 @@ def login_user():
     if user and check_password_hash(user.password, password):
         # Set a session cookie to indicate the user is logged in
         session['username'] = username
+        session['user_id'] = user.user_id
         return {"message": "Login successful!"}, 200
     else:
         return {"error": "Invalid credentials"}, 401
@@ -46,6 +49,6 @@ def login_user():
 @app.route('/api/logout-user', methods=['POST'])
 def logout_user():
     app.logger.info('Someone wants to logout!')
-    session.pop('username', None)  # Remove the session cookie
+    session.clear()
     return {"message": "Logout successful!"}, 200
     
