@@ -35,7 +35,7 @@ export default function Posts() {
   }
 
   return (
-    <Box sx={{ maxHeight: "75vh", overflowY: "auto", marginTop: 2 }}>
+    <Box sx={{ maxHeight: "70vh", overflowY: "auto", marginTop: 2 }}>
       <Stack spacing={2}>
         {posts.map((post, index) => (
           <Paper key={index} sx={{ padding: 2 }}>
