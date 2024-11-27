@@ -1,4 +1,5 @@
 # STL IMPORTS
+import logging
 
 # EXT IMPORTS
 from flask import jsonify

@@ -3,7 +3,7 @@ from flask import jsonify, request, session
 
 # AUTHORED IMPORTS
 from flask_app import app
-from flask_database import db, USER
+from flask_database import db, USER, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
 @app.route('/api/get-users', methods=['GET'])
@@ -51,4 +51,10 @@ def logout_user():
     app.logger.info('Someone wants to logout!')
     session.clear()
     return {"message": "Logout successful!"}, 200
+
+@app.route('/api/check-login', methods=['GET'])
+@login_required()
+def check_login():
+    app.logger.info('Someone wants to know their login status!')
+    return {"username":session['username']}
     

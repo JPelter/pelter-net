@@ -8,8 +8,35 @@ from flask_database import db, login_required, USER, POST
 @app.route('/api/get-posts', methods=['GET'])
 def get_posts():
     app.logger.info('Someone got the post list!')
-    return jsonify([{"id":_post.post_id, "title":_post.title, "content":_post.content }
-                        for _post in db.session.query(POST).order_by(POST.post_id.desc()).all()])
+    
+    # Query posts and join with the USER table to fetch the username
+    posts = (
+        db.session.query(
+            POST.post_id,
+            POST.title,
+            POST.content,
+            POST.date_created,
+            USER.username
+        )
+        .join(USER, POST.user_id == USER.user_id)
+        .order_by(POST.post_id.desc())
+        .all()
+    )
+    
+    # Format the results
+    response = [
+        {
+            "id": post.post_id,
+            "title": post.title,
+            "content": post.content,
+            "date_created": post.date_created,
+            "username": post.username
+        }
+        for post in posts
+    ]
+    
+    return jsonify(response)
+
 
 @app.route('/api/make-post', methods=['POST'])
 @login_required()
